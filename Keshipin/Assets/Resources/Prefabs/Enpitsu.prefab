@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6797774644084416953}
   - component: {fileID: 6797774644084416958}
   - component: {fileID: 6797774644084416959}
+  - component: {fileID: 2939806026681280377}
   m_Layer: 0
   m_Name: Enpitsu
   m_TagString: Item
@@ -91,3 +92,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2939806026681280377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6797774644084416956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60a6d6454345dbf4597b87c3cc50020f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shin: {fileID: 1979812131465503893, guid: 17a10c4ff81170142a7c725e5133406f, type: 3}

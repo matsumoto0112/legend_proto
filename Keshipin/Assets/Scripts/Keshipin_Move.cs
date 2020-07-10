@@ -69,6 +69,8 @@ public class Keshipin_Move : MonoBehaviour
         if (rigid.velocity.magnitude == 0 && move)
         {
             move = false;
+            mainCamera.enabled = true;
+            subCamera.enabled = false;
         }
 
         if (beforeFrameVector != Vector3.zero && nowFrameVector == Vector3.zero && !move)
@@ -109,17 +111,25 @@ public class Keshipin_Move : MonoBehaviour
         }
         else
         {
-            mainCamera.enabled = true;
-            subCamera.enabled = false;
+            if (Input.GetButtonDown("Fire1"))
+            {
+                mainCamera.enabled = !mainCamera.enabled;
+                subCamera.enabled = !subCamera.enabled;
+            }
+            if (subCamera.enabled)
+            {
+                subCamera.transform.position = transform.position + new Vector3(0, 2, 0) + beforeFrameVector * 5;
+                subCamera.transform.LookAt(transform.position + -beforeFrameVector * 5);
+            }
         }
     }
 
     void ItemMove()
     {
-        for(int i = 0; i < items.Count; i++)
-        {
-            items[i].transform.position = transform.position + new Vector3(i%3 -1, 1 + Mathf.Round(i/3), 0);
-        }
+        //for(int i = 0; i < items.Count; i++)
+        //{
+        //    items[i].transform.position = transform.position + new Vector3(i%3 -1, 1 + Mathf.Round(i/3), 0);
+        //}
     }
 
     private void OnCollisionStay(Collision collision)
@@ -143,7 +153,9 @@ public class Keshipin_Move : MonoBehaviour
         if(other.tag == "Item")
         {
             items.Add(other.transform.gameObject);
+            other.transform.parent = transform;
             other.transform.GetComponent<Collider>().enabled = false;
+            other.transform.position = transform.position + new Vector3((items.Count - 1) % 3 - 1, 1 + Mathf.Round((items.Count-1) / 3), 0);
         }
     }
 }
