@@ -51,7 +51,7 @@ public class Keshipin_Move : MonoBehaviour
     [SerializeField]
     private MoveType moveType = MoveType.MOVETYPE_A;
 
-    
+    private MeshRenderer meshRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -81,6 +81,8 @@ public class Keshipin_Move : MonoBehaviour
         stickVector = new Queue<Vector3>();
 
         moveTypeText.text = moveType.ToString();
+
+        meshRenderer = GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
@@ -91,15 +93,6 @@ public class Keshipin_Move : MonoBehaviour
         UI();
         CameraRotate();
         MoveDirectionObject();
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
     }
 
 
@@ -318,6 +311,23 @@ public class Keshipin_Move : MonoBehaviour
                     }
                 }
                 break;
+        }
+
+        if (move)
+        {
+            if(Input.GetButton("AButton") && rigid.velocity.magnitude >= 0.01f)
+            {
+                meshRenderer.material.color = Color.red;
+                rigid.velocity -= rigid.velocity / 0.8f * Time.deltaTime;
+            }
+            else
+            {
+                meshRenderer.material.color = Color.white;
+            }
+        }
+        else
+        {
+            meshRenderer.material.color = Color.white;
         }
     }
 
