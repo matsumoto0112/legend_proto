@@ -3931,7 +3931,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1358313243}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 507b3174b6b9ae048bb72589e04e4d28, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -4021,7 +4021,7 @@ MonoBehaviour:
   stickVectorMax: 30
   speedUI: {fileID: 1584891017}
   moveDirectionObject: {fileID: 1459090869}
-  moveType: 1
+  moveType: 2
 --- !u!65 &1358313250
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4724,7 +4724,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -436.4, y: -244.9}
+  m_AnchoredPosition: {x: -431.92, y: -244.98}
   m_SizeDelta: {x: 365.16046, y: 58.034378}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1584891016
@@ -6518,7 +6518,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -436.4, y: -185.9}
+  m_AnchoredPosition: {x: -431.92, y: -186.95}
   m_SizeDelta: {x: 365.16046, y: 58.034378}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2116829134
