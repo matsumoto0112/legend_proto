@@ -17,7 +17,10 @@ public class Keshipin_Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(transform.position.y <= -10)
+        {
+            Destroy(gameObject);
+        }
     }
 
 
