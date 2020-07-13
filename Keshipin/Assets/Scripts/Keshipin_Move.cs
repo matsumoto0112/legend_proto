@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class Keshipin_Move : MonoBehaviour
@@ -17,13 +18,26 @@ public class Keshipin_Move : MonoBehaviour
     [SerializeField]
     private Camera mainCamera;
     [SerializeField]
-    private Camera subCamera;
+    private Camera playerCamera;
+    [SerializeField]
+    private Camera dramaticCamera;
 
     private bool move;
+    private float moveTime;
 
     private bool hitGround;
 
     private List<GameObject> items;
+
+    private Queue<Vector3> stickVector;
+    [SerializeField]
+    private int stickVectorMax = 30;
+
+    [SerializeField]
+    private Text speedUI;
+
+    [SerializeField]
+    private GameObject moveDirectionObject;
 
     // Start is called before the first frame update
     void Start()
@@ -34,14 +48,18 @@ public class Keshipin_Move : MonoBehaviour
         nowFrameVector = Vector3.zero;
         impulseVector = Vector3.zero;
 
-        mainCamera.enabled = true;
-        subCamera.enabled = false;
+        mainCamera.enabled = false;
+        playerCamera.enabled = true;
+        dramaticCamera.enabled = false;
 
         move = false;
 
         hitGround = true;
 
         items = new List<GameObject>();
+        moveTime = 0;
+
+        stickVector = new Queue<Vector3>();
     }
 
     // Update is called once per frame
@@ -49,7 +67,9 @@ public class Keshipin_Move : MonoBehaviour
     {
         Move();
         CameraChange();
-        ItemMove();
+        UI();
+        CameraRotate();
+        MoveDirectionObject();
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -66,70 +86,86 @@ public class Keshipin_Move : MonoBehaviour
     {
         nowFrameVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
-        if (rigid.velocity.magnitude == 0 && move)
+        if (move)
         {
-            move = false;
-            mainCamera.enabled = true;
-            subCamera.enabled = false;
+            moveTime += Time.deltaTime;
+            playerCamera.fieldOfView = 60 + (rigid.velocity.magnitude * 2);
+
+            if(moveTime >= 1 && rigid.velocity.magnitude == 0)
+            {
+                move = false;
+                mainCamera.enabled = false;
+                playerCamera.enabled =true;
+                dramaticCamera.enabled = false;
+                moveTime = 0;
+            }
         }
 
-        if (beforeFrameVector != Vector3.zero && nowFrameVector == Vector3.zero && !move)
+        if (beforeFrameVector != Vector3.zero && nowFrameVector == Vector3.zero && !move && playerCamera.enabled)
         {
-            rigid.AddForce(-beforeFrameVector * impulsePower, ForceMode.Impulse);
+            Vector3 maxVector = Vector3.zero;
+            while (stickVector.Count > 0)
+            {
+                if (maxVector.magnitude < stickVector.Peek().magnitude)
+                {
+                    maxVector = stickVector.Dequeue();
+                    continue;
+                }
+                stickVector.Dequeue();
+            }
+            rigid.AddForce(playerCamera.transform.rotation *  -maxVector * impulsePower, ForceMode.Impulse);
             move = true;
             impulseVector = beforeFrameVector;
         }
 
         beforeFrameVector = nowFrameVector;
-        
+
+        stickVector.Enqueue(nowFrameVector);
+
+        while (stickVector.Count > stickVectorMax)
+        {
+            stickVector.Dequeue();
+        }
     }
 
     void CameraChange()
     {
-        //if(rigid.velocity.magnitude != 0)
-        //{
-        //    mainCamera.enabled = false;
-        //    subCamera.enabled = true;
-        //    subCamera.transform.position = transform.position + -rigid.velocity * 2;
-        //    subCamera.transform.LookAt(transform.position + rigid.velocity * 2);
-        //}
-        //else
-        //{
-        //    mainCamera.enabled = true;
-        //    subCamera.enabled = false;
-        //}
-
         if (move)
         {
             mainCamera.enabled = false;
-            subCamera.enabled = true;
-            if (hitGround)
-            {
-                subCamera.transform.position = transform.position + new Vector3(0, 2, 0) + impulseVector * 5;
-                subCamera.transform.LookAt(transform.position + -impulseVector * 5);
-            }
+            playerCamera.enabled = false;
+            dramaticCamera.enabled = true;
+            //if (hitGround)
+            //{
+            //    playerCamera.transform.position = transform.position + new Vector3(0, 2, 0) + impulseVector * 5;
+            //}
         }
         else
         {
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire1") && !move)
             {
                 mainCamera.enabled = !mainCamera.enabled;
-                subCamera.enabled = !subCamera.enabled;
-            }
-            if (subCamera.enabled)
-            {
-                subCamera.transform.position = transform.position + new Vector3(0, 2, 0) + beforeFrameVector * 5;
-                subCamera.transform.LookAt(transform.position + -beforeFrameVector * 5);
+                playerCamera.enabled = !playerCamera.enabled;
             }
         }
     }
 
-    void ItemMove()
+    void CameraRotate()
     {
-        //for(int i = 0; i < items.Count; i++)
-        //{
-        //    items[i].transform.position = transform.position + new Vector3(i%3 -1, 1 + Mathf.Round(i/3), 0);
-        //}
+        if (playerCamera.enabled)
+        {
+            playerCamera.transform.RotateAround(transform.position,Vector3.up, Input.GetAxisRaw("Horizontal_R"));
+        }
+    }
+
+    void MoveDirectionObject()
+    {
+        moveDirectionObject.transform.position = transform.position + playerCamera.transform.rotation * -nowFrameVector.normalized * 10;
+    }
+
+    void UI()
+    {
+        speedUI.text = "速度:" + Mathf.Round(rigid.velocity.magnitude) + "km";
     }
 
     private void OnCollisionStay(Collision collision)
