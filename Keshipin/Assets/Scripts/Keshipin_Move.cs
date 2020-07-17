@@ -432,9 +432,9 @@ public class Keshipin_Move : MonoBehaviour
         if(other.tag == "Item")
         {
             items.Add(other.transform.gameObject);
-            other.transform.parent = transform;
+            other.GetComponent<Item>().havePlayer = true;
             other.transform.GetComponent<Collider>().enabled = false;
-            other.transform.position = transform.position + new Vector3((items.Count - 1) % 3 - 1, 1 + Mathf.Round((items.Count-1) / 3), 0);
+            //other.transform.position = transform.position + new Vector3((items.Count - 1) % 3 - 1, 1 + Mathf.Round((items.Count-1) / 3), 0);
         }
         if(other.tag == "Keshikasu")
         {

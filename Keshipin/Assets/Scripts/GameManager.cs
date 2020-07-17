@@ -17,6 +17,14 @@ public class GameManager : MonoBehaviour
     private GameObject[] enemyList;
     private int enemyStopNumber;
 
+    [SerializeField]
+    private GameObject enemy;
+
+    [SerializeField]
+    private int maxTurn = 10;
+
+    public static int turnNumber;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,17 +35,19 @@ public class GameManager : MonoBehaviour
         nowEnemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
 
         enemyStopNumber = 0;
+        turnNumber = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
+
         nowEnemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
         enemyList = GameObject.FindGameObjectsWithTag("Enemy");
 
         if (gameState == GameState.GAMEPLAY)
         {
-            if (nowEnemyCount <= 0)
+            if (nowEnemyCount <= 0 && turnNumber >= maxTurn)
             {
                 gameState = GameState.GAMECLEAR;
             }
@@ -52,7 +62,7 @@ public class GameManager : MonoBehaviour
         {
             case TrunState.ENEMYTURN:
                 enemyStopNumber = 0;
-                for(int i = 0;i <= enemyList.Length -1; i++)
+                for (int i = 0; i <= enemyList.Length - 1; i++)
                 {
                     if (enemyList[i].GetComponent<Keshipin_Enemy>().StopEnemy())
                     {
@@ -61,15 +71,24 @@ public class GameManager : MonoBehaviour
                     enemyList[i].GetComponent<Keshipin_Enemy>().Attack(player);
                 }
 
-                if(enemyStopNumber >= enemyList.Length)
+                if (enemyStopNumber >= enemyList.Length)
                 {
                     turnState = TrunState.PLAYERTURN;
                     for (int i = 0; i <= enemyList.Length - 1; i++)
                     {
                         enemyList[i].GetComponent<Keshipin_Enemy>().Setting();
                     }
+                    turnNumber++;
+                    if ((turnNumber % 3 == 0 || turnNumber.ToString().Contains("3") || enemyList.Length == 0)&&turnNumber<maxTurn)
+                    {
+                        Instantiate(enemy, new Vector3(0, 3.5f, 0), Quaternion.identity);
+                        Instantiate(enemy, new Vector3(2, 3.5f, 0), Quaternion.identity);
+                        Instantiate(enemy, new Vector3(-2, 3.5f, 0), Quaternion.identity);
+                    }
                 }
                 enemyStopNumber = 0;
+
+                
                 break;
         }
         enemyList.Initialize();

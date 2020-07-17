@@ -9,6 +9,8 @@ public class UIManager : MonoBehaviour
     private Text clearOverText;
     [SerializeField]
     private Text turnStateText;
+    [SerializeField]
+    private Text turnNumberUI;
 
     // Start is called before the first frame update
     void Start()
@@ -29,5 +31,7 @@ public class UIManager : MonoBehaviour
         }
 
         turnStateText.text = GameManager.turnState.ToString();
+
+        turnNumberUI.text = GameManager.turnNumber + "ターン目";
     }
 }
