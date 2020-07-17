@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 7292011684500661724}
   - component: {fileID: 7292011684500661727}
   - component: {fileID: 7292011684500661726}
-  - component: {fileID: 7292011684500661721}
   - component: {fileID: 7292011684500661699}
   m_Layer: 0
   m_Name: TekiKeshipin
@@ -90,7 +89,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7292011684500661720}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 507b3174b6b9ae048bb72589e04e4d28, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -110,26 +109,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &7292011684500661721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7292011684500661720}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16ba50fb4be9f4b47ac48bf4cd251c96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  impulsePower: 100
-  mainCamera: {fileID: 0}
-  playerCamera: {fileID: 0}
-  dramaticCamera: {fileID: 0}
-  stickVectorMax: 30
-  speedUI: {fileID: 0}
 --- !u!114 &7292011684500661699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,4 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b16ce26f526e1a45bd0c195518d00f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  impulsePower: 30
   beAttackedImpulsePower: 10
+  keshikasu: {fileID: 4976297002402495719, guid: 07384cb03152a0740910a84044c2894f,
+    type: 3}

@@ -7,6 +7,8 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField]
     private Text clearOverText;
+    [SerializeField]
+    private Text turnStateText;
 
     // Start is called before the first frame update
     void Start()
@@ -25,5 +27,7 @@ public class UIManager : MonoBehaviour
         {
             clearOverText.text = "げーむおーばー";
         }
+
+        turnStateText.text = GameManager.turnState.ToString();
     }
 }

@@ -53,6 +53,13 @@ public class Keshipin_Move : MonoBehaviour
 
     private MeshRenderer meshRenderer;
 
+    [SerializeField]
+    private Collider triggerCollider;
+
+    private Vector3 firstSize;
+    private float keshikasuNumber;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,16 +90,24 @@ public class Keshipin_Move : MonoBehaviour
         moveTypeText.text = moveType.ToString();
 
         meshRenderer = GetComponent<MeshRenderer>();
+
+        firstSize = transform.localScale;
+        keshikasuNumber = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Move();
-        CameraChange();
-        UI();
+        if(GameManager.turnState == GameManager.TrunState.PLAYERTURN)
+        {
+            
+            Move();
+            CameraChange();
+            UI();
+            MoveDirectionObject();
+            SizeChange();
+        }
         CameraRotate();
-        MoveDirectionObject();
     }
 
 
@@ -116,6 +131,8 @@ public class Keshipin_Move : MonoBehaviour
                         playerCamera.enabled = true;
                         dramaticCamera.enabled = false;
                         moveTime = 0;
+                        GameManager.turnState = GameManager.TrunState.ENEMYTURN;
+                        triggerCollider.enabled = false;
                     }
                 }
 
@@ -134,6 +151,7 @@ public class Keshipin_Move : MonoBehaviour
                     rigid.AddForce(playerCamera.transform.rotation * -maxVector * impulsePower, ForceMode.Impulse);
                     move = true;
                     impulseVector = beforeFrameVector;
+                    triggerCollider.enabled = true;
                 }
 
                 beforeFrameVector = nowFrameVector;
@@ -163,6 +181,8 @@ public class Keshipin_Move : MonoBehaviour
                         moveTime = 0;
                         typeB_impulsePower = 0;
                         minus = false;
+                        GameManager.turnState = GameManager.TrunState.ENEMYTURN;
+                        triggerCollider.enabled = false;
                     }
                 }
 
@@ -205,6 +225,7 @@ public class Keshipin_Move : MonoBehaviour
                         rigid.AddForce(playerCamera.transform.rotation * maxVector * (typeB_impulsePower * impulsePower), ForceMode.Impulse);
                         move = true;
                         impulseVector = beforeFrameVector;
+                        triggerCollider.enabled = true;
                     }
                     else
                     {
@@ -243,6 +264,8 @@ public class Keshipin_Move : MonoBehaviour
                         moveTime = 0;
                         typeB_impulsePower = 0;
                         minus = false;
+                        GameManager.turnState = GameManager.TrunState.ENEMYTURN;
+                        triggerCollider.enabled = false;
                     }
                 }
 
@@ -289,6 +312,7 @@ public class Keshipin_Move : MonoBehaviour
                         rigid.AddForce(playerCamera.transform.rotation * maxVector * (typeB_impulsePower * impulsePower), ForceMode.Impulse);
                         move = true;
                         impulseVector = beforeFrameVector;
+                        triggerCollider.enabled = true;
                     }
                     else
                     {
@@ -382,6 +406,11 @@ public class Keshipin_Move : MonoBehaviour
         speedUI.text = "速度:" + Mathf.Round(rigid.velocity.magnitude) + "km";
     }
 
+    void SizeChange()
+    {
+        transform.localScale = firstSize * (1 + (keshikasuNumber / 10));
+    }
+
     private void OnCollisionStay(Collision collision)
     {
         if(collision.transform.tag == "Stage")
@@ -406,6 +435,12 @@ public class Keshipin_Move : MonoBehaviour
             other.transform.parent = transform;
             other.transform.GetComponent<Collider>().enabled = false;
             other.transform.position = transform.position + new Vector3((items.Count - 1) % 3 - 1, 1 + Mathf.Round((items.Count-1) / 3), 0);
+        }
+        if(other.tag == "Keshikasu")
+        {
+            Destroy(other.gameObject);
+            //rigid.mass = transform.localScale.y;
+            keshikasuNumber++;
         }
     }
 }

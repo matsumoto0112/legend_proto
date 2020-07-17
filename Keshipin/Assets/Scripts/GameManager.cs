@@ -8,22 +8,32 @@ public class GameManager : MonoBehaviour
     public enum GameState {GAMEPLAY,GAMEOVER,GAMECLEAR};
     public static GameState gameState;
 
+    public enum TrunState {PLAYERTURN,ENEMYTURN}
+    public static TrunState turnState;
+
     private GameObject player;
     private int nowEnemyCount;
+
+    private GameObject[] enemyList;
+    private int enemyStopNumber;
 
     // Start is called before the first frame update
     void Start()
     {
         gameState = GameState.GAMEPLAY;
+        turnState = TrunState.PLAYERTURN;
 
         player = GameObject.FindGameObjectWithTag("Player");
         nowEnemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
+
+        enemyStopNumber = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         nowEnemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        enemyList = GameObject.FindGameObjectsWithTag("Enemy");
 
         if (gameState == GameState.GAMEPLAY)
         {
@@ -36,6 +46,33 @@ public class GameManager : MonoBehaviour
                 gameState = GameState.GAMEOVER;
             }
         }
+
+
+        switch (turnState)
+        {
+            case TrunState.ENEMYTURN:
+                enemyStopNumber = 0;
+                for(int i = 0;i <= enemyList.Length -1; i++)
+                {
+                    if (enemyList[i].GetComponent<Keshipin_Enemy>().StopEnemy())
+                    {
+                        enemyStopNumber++;
+                    }
+                    enemyList[i].GetComponent<Keshipin_Enemy>().Attack(player);
+                }
+
+                if(enemyStopNumber >= enemyList.Length)
+                {
+                    turnState = TrunState.PLAYERTURN;
+                    for (int i = 0; i <= enemyList.Length - 1; i++)
+                    {
+                        enemyList[i].GetComponent<Keshipin_Enemy>().Setting();
+                    }
+                }
+                enemyStopNumber = 0;
+                break;
+        }
+        enemyList.Initialize();
 
 
         if (Input.GetKeyDown(KeyCode.Escape))
