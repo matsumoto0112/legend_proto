@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
 
     private GameObject[] enemyList;
     private int enemyStopNumber;
+    private int enemyAttackNumber;
+    [SerializeField]
+    private float enemyAttackTime = 1;
+    private float enemyAttackTimer;
 
     [SerializeField]
     private GameObject enemy;
@@ -45,6 +49,9 @@ public class GameManager : MonoBehaviour
 
         pose = false;
         //SoundManager.PlayBGM(0,0.5f);
+
+        enemyAttackNumber = 0;
+        enemyAttackTimer = 1;
     }
 
     // Update is called once per frame
@@ -87,16 +94,24 @@ public class GameManager : MonoBehaviour
         {
             case TrunState.ENEMYTURN:
                 enemyStopNumber = 0;
+
                 for (int i = 0; i <= enemyList.Length - 1; i++)
                 {
                     if (enemyList[i].GetComponent<Keshipin_Enemy>().StopEnemy())
                     {
                         enemyStopNumber++;
                     }
-                    enemyList[i].GetComponent<Keshipin_Enemy>().Attack(player);
                 }
 
-                if (enemyStopNumber >= enemyList.Length)
+                enemyAttackTimer += Time.deltaTime;
+                if(enemyAttackTimer >= enemyAttackTime && enemyAttackNumber < enemyList.Length)
+                {
+                    enemyList[enemyAttackNumber].GetComponent<Keshipin_Enemy>().Attack(player);
+                    enemyAttackNumber++;
+                    enemyAttackTimer = 0;
+                }
+
+                if (enemyStopNumber >= enemyList.Length && enemyAttackNumber >= enemyList.Length)
                 {
                     turnState = TrunState.PLAYERTURN;
                     for (int i = 0; i <= enemyList.Length - 1; i++)
@@ -110,6 +125,8 @@ public class GameManager : MonoBehaviour
                         Instantiate(enemy, new Vector3(2, 3.5f, 0), Quaternion.identity);
                         Instantiate(enemy, new Vector3(-2, 3.5f, 0), Quaternion.identity);
                     }
+                    enemyAttackNumber = 0;
+                    enemyAttackTimer = enemyAttackTime;
                 }
                 enemyStopNumber = 0;
 

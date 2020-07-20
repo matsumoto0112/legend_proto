@@ -63,7 +63,7 @@ public class Keshipin_Enemy : MonoBehaviour
 
     public bool StopEnemy()
     {
-        if(isAttack && attackTimer >= 2 && rigid.velocity.magnitude <= 0.1f)
+        if(isAttack && rigid.velocity.magnitude <= 0.1f)
         {
             return true;
         }
