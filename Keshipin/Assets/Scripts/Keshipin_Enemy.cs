@@ -51,7 +51,7 @@ public class Keshipin_Enemy : MonoBehaviour
         if (!isAttack)
         {
             Vector3 attackVector = (player.transform.position - transform.position).normalized;
-
+            SoundManager.PlaySE(0);
             rigid.AddForce(attackVector * impulsePower, ForceMode.Impulse);
             isAttack = true;
         }
@@ -90,6 +90,7 @@ public class Keshipin_Enemy : MonoBehaviour
         {
             if (other.transform.tag == "Player")
             {
+                SoundManager.PlaySE(0);
                 Vector3 attackVector = (transform.position - other.transform.position).normalized;
                 attackVector -= new Vector3(0, attackVector.y, 0);
                 //rigid.AddForce((attackVector * beAttackedImpulsePower) + new Vector3(0, 10, 0), ForceMode.Impulse);

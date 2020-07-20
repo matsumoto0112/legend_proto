@@ -136,7 +136,7 @@ public class GameManager : MonoBehaviour
         enemyList.Initialize();
 
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || (Input.GetButton("StartButton") && Input.GetButton("SelectButton")))
         {
             Application.Quit();
         }

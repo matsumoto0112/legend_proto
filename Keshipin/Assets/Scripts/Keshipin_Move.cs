@@ -108,7 +108,8 @@ public class Keshipin_Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(GameManager.turnState == GameManager.TrunState.PLAYERTURN)
+        moveTypeText.text = moveType.ToString();
+        if (GameManager.turnState == GameManager.TrunState.PLAYERTURN)
         {
             if (!skillWait)
             {
@@ -122,8 +123,8 @@ public class Keshipin_Move : MonoBehaviour
             CameraChange();
             UI();
             SizeChange();
-            
         }
+        MoveTypeChange();
         ItemRotation();
         CameraRotate();
     }
@@ -170,7 +171,7 @@ public class Keshipin_Move : MonoBehaviour
                     move = true;
                     impulseVector = beforeFrameVector;
                     triggerCollider.enabled = true;
-                    //SoundManager.PlaySE(0);
+                    SoundManager.PlaySE(0);
                 }
 
                 beforeFrameVector = nowFrameVector;
@@ -245,7 +246,7 @@ public class Keshipin_Move : MonoBehaviour
                         move = true;
                         impulseVector = beforeFrameVector;
                         triggerCollider.enabled = true;
-                        //SoundManager.PlaySE(0);
+                        SoundManager.PlaySE(0);
                     }
                     else
                     {
@@ -333,7 +334,7 @@ public class Keshipin_Move : MonoBehaviour
                         move = true;
                         impulseVector = beforeFrameVector;
                         triggerCollider.enabled = true;
-                        //SoundManager.PlaySE(0);
+                        SoundManager.PlaySE(0);
                     }
                     else
                     {
@@ -357,13 +358,19 @@ public class Keshipin_Move : MonoBehaviour
                 }
                 break;
         }
-
+        
         if (move)
         {
+            //if(Input.GetButtonDown("BButton"))
+            //{
+            //    rigid.AddTorque(new Vector3(0, 100, 0), ForceMode.Impulse);
+            //}
+
             if(Input.GetButton("AButton") && rigid.velocity.magnitude >= 0.01f)
             {
                 meshRenderer.material.color = Color.red;
                 rigid.velocity -= rigid.velocity / 0.8f * Time.deltaTime;
+                
             }
             else
             {
@@ -482,26 +489,36 @@ public class Keshipin_Move : MonoBehaviour
         }
     }
 
+    void MoveTypeChange()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            moveType = MoveType.MOVETYPE_A;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            moveType = MoveType.MOVETYPE_B;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            moveType = MoveType.MOVETYPE_B_A;
+        }
+    }
+
     void ItemRotation()
     {
         if(itemUp != null)
         {
-            
-
             itemUp.transform.position = transform.position + transform.rotation * new Vector3(0, 0.75f + keshikasuNumber*0.05f, 1f);
             itemUp.transform.rotation = transform.rotation;
         }
         if (itemRight != null)
         {
-            
-
             itemRight.transform.position = transform.position + transform.rotation * new Vector3(1.25f + keshikasuNumber * 0.1f, 0, 0);
             itemRight.transform.rotation = transform.rotation;
         }
         if (itemLeft != null)
         {
-            
-
             itemLeft.transform.position = transform.position + transform.rotation * new Vector3(-1.25f - keshikasuNumber * 0.1f, 0, 0);
             itemLeft.transform.rotation = transform.rotation;
         }
