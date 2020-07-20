@@ -11,10 +11,10 @@ public class Item_Enpitsu : Item
     protected override void Attack()
     {
         //Instantiate(shin, transform.rotation * ( transform.position + new Vector3(0, 0, 3f)),Quaternion.identity,transform);
-        shin.GetComponent<Rigidbody>().AddForce(transform.rotation * new Vector3(0, 0, 1), ForceMode.Impulse);
-        shin.GetComponent<Rigidbody>().useGravity = true;
-        shin.GetComponent<Collider>().isTrigger = false;
-        shin.transform.parent = null;
+        GameObject bullet = Instantiate(shin,transform.position + transform.rotation * new Vector3(0, 0, 2), Quaternion.identity);
+        bullet.GetComponent<Rigidbody>().AddForce(transform.rotation * new Vector3(0, 0, 1) * 30, ForceMode.Impulse);
+        bullet.GetComponent<Rigidbody>().useGravity = true;
+        bullet.GetComponent<Collider>().isTrigger = false;
         Destroy(gameObject);
     }
 }

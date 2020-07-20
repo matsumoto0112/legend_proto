@@ -79,6 +79,11 @@ public class Keshipin_Enemy : MonoBehaviour
         attackTimer = 0;
     }
 
+    public float ReturnSpeed()
+    {
+        return rigid.velocity.magnitude;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(GameManager.turnState == GameManager.TrunState.PLAYERTURN)
@@ -102,7 +107,6 @@ public class Keshipin_Enemy : MonoBehaviour
                 if(rigid.velocity.magnitude >= 1 && Random.Range(0,100) <= 5)
                 {
                     Instantiate(keshikasu, transform.position - new Vector3(0, transform.position.y, 0), Quaternion.identity);
-                    Debug.Log("HAIUWNCAWDWA");
                 }
             }
         }

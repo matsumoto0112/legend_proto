@@ -34,7 +34,7 @@ public class Keshipin_Move : MonoBehaviour
 
     private bool hitGround;
 
-    private List<GameObject> items;
+    //private List<GameObject> items;
 
     private Queue<Vector3> stickVector;
     [SerializeField]
@@ -59,6 +59,13 @@ public class Keshipin_Move : MonoBehaviour
     private Vector3 firstSize;
     private float keshikasuNumber;
 
+    private bool skillWait;
+    private Item itemUp,itemLeft,itemRight;
+    enum SkillState {ITEM_UP,ITEM_RIGHT,ITEM_LEFT,NULL};
+    private SkillState skillState;
+    [SerializeField]
+    private Text skillUI;
+
 
     // Start is called before the first frame update
     void Start()
@@ -77,7 +84,7 @@ public class Keshipin_Move : MonoBehaviour
 
         hitGround = true;
 
-        items = new List<GameObject>();
+        //items = new List<GameObject>();
         moveTime = 0;
 
         typeB_impulsePower = 0;
@@ -93,6 +100,9 @@ public class Keshipin_Move : MonoBehaviour
 
         firstSize = transform.localScale;
         keshikasuNumber = 0;
+
+        skillWait = false;
+        skillState = SkillState.NULL;
     }
 
     // Update is called once per frame
@@ -100,13 +110,21 @@ public class Keshipin_Move : MonoBehaviour
     {
         if(GameManager.turnState == GameManager.TrunState.PLAYERTURN)
         {
-            
-            Move();
+            if (!skillWait)
+            {
+                Move();
+                MoveDirectionObject();
+            }
+            if (!move)
+            {
+                Skill();
+            }
             CameraChange();
             UI();
-            MoveDirectionObject();
             SizeChange();
+            
         }
+        ItemRotation();
         CameraRotate();
     }
 
@@ -124,7 +142,7 @@ public class Keshipin_Move : MonoBehaviour
                     moveTime += Time.deltaTime;
                     playerCamera.fieldOfView = 60 + (rigid.velocity.magnitude * 2);
 
-                    if (moveTime >= 1 && rigid.velocity.magnitude == 0)
+                    if (moveTime >= 1 && rigid.velocity.magnitude == 0 && !GameManager.enemyMove)
                     {
                         move = false;
                         mainCamera.enabled = false;
@@ -172,7 +190,7 @@ public class Keshipin_Move : MonoBehaviour
                     moveTime += Time.deltaTime;
                     playerCamera.fieldOfView = 60 + (rigid.velocity.magnitude * 2);
 
-                    if (moveTime >= 1 && rigid.velocity.magnitude == 0)
+                    if (moveTime >= 1 && rigid.velocity.magnitude == 0 && !GameManager.enemyMove)
                     {
                         move = false;
                         mainCamera.enabled = false;
@@ -255,7 +273,7 @@ public class Keshipin_Move : MonoBehaviour
                     moveTime += Time.deltaTime;
                     playerCamera.fieldOfView = 60 + (rigid.velocity.magnitude * 2);
 
-                    if (moveTime >= 1 && rigid.velocity.magnitude == 0)
+                    if (moveTime >= 1 && rigid.velocity.magnitude == 0 && !GameManager.enemyMove)
                     {
                         move = false;
                         mainCamera.enabled = false;
@@ -404,11 +422,86 @@ public class Keshipin_Move : MonoBehaviour
     void UI()
     {
         speedUI.text = "速度:" + Mathf.Round(rigid.velocity.magnitude) + "km";
+        skillUI.text = skillState.ToString();
     }
 
     void SizeChange()
     {
         transform.localScale = firstSize * (1 + (keshikasuNumber / 10));
+    }
+
+    void Skill()
+    {
+        if (Input.GetButtonDown("LButton")&&!Input.GetButton("BButton"))
+        {
+            skillWait = !skillWait;
+        }
+
+        if (skillWait)
+        {
+            meshRenderer.material.color = Color.blue;
+            if (Input.GetAxisRaw("Vertical") >= 0.9f && itemUp != null)
+            {
+                skillState = SkillState.ITEM_UP;
+            }
+            else if (Input.GetAxisRaw("Horizontal") >= 0.9f && itemRight != null)
+            {
+                skillState = SkillState.ITEM_RIGHT;
+            }
+            else if(Input.GetAxisRaw("Horizontal") <= -0.9f && itemLeft != null)
+            {
+                skillState = SkillState.ITEM_LEFT;
+            }
+            else if(itemUp == null && itemRight == null && itemLeft == null)
+            {
+                skillState = SkillState.NULL;
+            }
+
+            if (Input.GetButtonDown("BButton"))
+            {
+                switch (skillState)
+                {
+                    case SkillState.ITEM_UP:
+                        if(!itemUp.isAttack)itemUp.SkillStart();
+                        break;
+                    case SkillState.ITEM_RIGHT:
+                        if (!itemRight.isAttack) itemRight.SkillStart();
+                        break;
+                    case SkillState.ITEM_LEFT:
+                        if (!itemLeft.isAttack) itemLeft.SkillStart();
+                        break;
+                }
+            }
+        }
+        else
+        {
+            meshRenderer.material.color = Color.white;
+        }
+    }
+
+    void ItemRotation()
+    {
+        if(itemUp != null)
+        {
+            
+
+            itemUp.transform.position = transform.position + transform.rotation * new Vector3(0, 0.75f + keshikasuNumber*0.05f, 1f);
+            itemUp.transform.rotation = transform.rotation;
+        }
+        if (itemRight != null)
+        {
+            
+
+            itemRight.transform.position = transform.position + transform.rotation * new Vector3(1.25f + keshikasuNumber * 0.1f, 0, 0);
+            itemRight.transform.rotation = transform.rotation;
+        }
+        if (itemLeft != null)
+        {
+            
+
+            itemLeft.transform.position = transform.position + transform.rotation * new Vector3(-1.25f - keshikasuNumber * 0.1f, 0, 0);
+            itemLeft.transform.rotation = transform.rotation;
+        }
     }
 
     private void OnCollisionStay(Collision collision)
@@ -431,8 +524,21 @@ public class Keshipin_Move : MonoBehaviour
     {
         if(other.tag == "Item")
         {
-            items.Add(other.transform.gameObject);
-            other.GetComponent<Item>().havePlayer = true;
+            //items.Add(other.transform.gameObject);
+            if(itemUp == null)
+            {
+                itemUp = other.GetComponent<Item>();
+                skillState = SkillState.ITEM_UP;
+                Debug.Log("OIANDJKDOWJDKOACW");
+            }
+            else if(itemRight == null)
+            {
+                itemRight = other.GetComponent<Item>();
+            }
+            else if(itemLeft == null)
+            {
+                itemLeft = other.GetComponent<Item>();
+            }
             other.transform.GetComponent<Collider>().enabled = false;
             //other.transform.position = transform.position + new Vector3((items.Count - 1) % 3 - 1, 1 + Mathf.Round((items.Count-1) / 3), 0);
         }

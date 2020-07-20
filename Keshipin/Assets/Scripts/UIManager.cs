@@ -11,6 +11,10 @@ public class UIManager : MonoBehaviour
     private Text turnStateText;
     [SerializeField]
     private Text turnNumberUI;
+    [SerializeField]
+    private Text poseUI;
+    [SerializeField]
+    private Image posePanel;
 
     // Start is called before the first frame update
     void Start()
@@ -33,5 +37,16 @@ public class UIManager : MonoBehaviour
         turnStateText.text = GameManager.turnState.ToString();
 
         turnNumberUI.text = GameManager.turnNumber + "ターン目";
+
+        if (GameManager.pose)
+        {
+            poseUI.text = "ぽーず中";
+            posePanel.enabled = true;
+        }
+        else
+        {
+            poseUI.text = "";
+            posePanel.enabled = false;
+        }
     }
 }

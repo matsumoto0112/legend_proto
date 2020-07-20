@@ -25,6 +25,10 @@ public class GameManager : MonoBehaviour
 
     public static int turnNumber;
 
+    public static bool enemyMove;
+
+    public static bool pose;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +40,10 @@ public class GameManager : MonoBehaviour
 
         enemyStopNumber = 0;
         turnNumber = 1;
+
+        enemyMove = false;
+
+        pose = false;
     }
 
     // Update is called once per frame
@@ -57,6 +65,22 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        enemyStopNumber = 0;
+        for (int i = 0; i <= enemyList.Length - 1; i++)
+        {
+            if (enemyList[i].GetComponent<Keshipin_Enemy>().ReturnSpeed() <= 0.1f)
+            {
+                enemyStopNumber++;
+            }
+        }
+        if (enemyStopNumber >= enemyList.Length)
+        {
+            enemyMove = false;
+        }
+        else
+        {
+            enemyMove = true;
+        }
 
         switch (turnState)
         {
@@ -101,6 +125,19 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        if (Input.GetButtonDown("StartButton"))
+        {
+            pose = !pose;
+        }
+
+        if (pose)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
         }
     }
 }
