@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
         enemyMove = false;
 
         pose = false;
+        //SoundManager.PlayBGM(0,0.5f);
     }
 
     // Update is called once per frame

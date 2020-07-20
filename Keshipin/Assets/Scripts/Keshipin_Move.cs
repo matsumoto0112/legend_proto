@@ -170,6 +170,7 @@ public class Keshipin_Move : MonoBehaviour
                     move = true;
                     impulseVector = beforeFrameVector;
                     triggerCollider.enabled = true;
+                    SoundManager.PlaySE(0);
                 }
 
                 beforeFrameVector = nowFrameVector;
@@ -244,6 +245,7 @@ public class Keshipin_Move : MonoBehaviour
                         move = true;
                         impulseVector = beforeFrameVector;
                         triggerCollider.enabled = true;
+                        SoundManager.PlaySE(0);
                     }
                     else
                     {
@@ -331,6 +333,7 @@ public class Keshipin_Move : MonoBehaviour
                         move = true;
                         impulseVector = beforeFrameVector;
                         triggerCollider.enabled = true;
+                        SoundManager.PlaySE(0);
                     }
                     else
                     {
