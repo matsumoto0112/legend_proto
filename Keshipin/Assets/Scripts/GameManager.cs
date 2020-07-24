@@ -111,6 +111,7 @@ public class GameManager : MonoBehaviour
                     enemyAttackTimer = 0;
                 }
 
+                //Debug.Log("敵カウント: " + enemyList.Length + " / 停止カウント: " + enemyStopNumber + " / 攻撃カウント: " + enemyAttackNumber);
                 if (enemyStopNumber >= enemyList.Length && enemyAttackNumber >= enemyList.Length)
                 {
                     turnState = TrunState.PLAYERTURN;
