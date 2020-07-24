@@ -29,7 +29,7 @@ public class Keshipin_Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.y <= -10)
+        if (transform.position.y <= -10 || transform.position.y >= 20)
         {
             Destroy(gameObject);
         }
@@ -104,11 +104,11 @@ public class Keshipin_Enemy : MonoBehaviour
         {
             if (other.transform.tag == "Player")
             {
-                SoundManager.PlaySE(0);
+                SoundManager.PlaySE(1);
                 Vector3 attackVector = (transform.position - other.transform.position).normalized;
                 attackVector -= new Vector3(0, attackVector.y, 0);
                 //rigid.AddForce((attackVector * beAttackedImpulsePower) + new Vector3(0, 10, 0), ForceMode.Impulse);
-                rigid.AddForce((attackVector * other.transform.GetComponent<Rigidbody>().velocity.magnitude) + new Vector3(0, other.transform.localScale.y - 1, 0) * other.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.Impulse);
+                rigid.AddForce((attackVector * other.transform.GetComponent<Rigidbody>().velocity.magnitude) + new Vector3(0, other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() * 0.01f, 0) * other.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.Impulse);
             }
         }
     }
