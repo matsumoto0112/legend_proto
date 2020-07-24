@@ -41,6 +41,7 @@ public class Rakugaki : MonoBehaviour
                     {
                         GameObject keshikasuObj = Instantiate(keshikasu, other.transform.position + -other.GetComponent<Keshipin_Move>().ReturnVector() * 3, Quaternion.identity);
                         keshikasuObj.transform.position -= new Vector3(0, keshikasuObj.transform.position.y, 0);
+                        
                         render.material.color = new Color(render.material.color.r, render.material.color.g, render.material.color.b, render.material.color.a - 0.01f);
                         other.GetComponent<Keshipin_Move>().MinusKeshikasuNumber();
                         keshikasuTimer = 0;
@@ -63,6 +64,7 @@ public class Rakugaki : MonoBehaviour
                 {
                     GameObject keshikasuObj = Instantiate(keshikasu, other.transform.position + -other.GetComponent<Rigidbody>().velocity.normalized * 3, Quaternion.identity);
                     keshikasuObj.transform.position -= new Vector3(0, keshikasuObj.transform.position.y, 0);
+                    keshikasuObj.GetComponent<MeshRenderer>().material.color = Color.gray;
                     render.material.color = new Color(render.material.color.r, render.material.color.g, render.material.color.b, render.material.color.a - 0.01f);
                     keshikasuTimer = 0;
                 }

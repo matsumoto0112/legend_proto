@@ -33,6 +33,11 @@ public class GameManager : MonoBehaviour
 
     public static bool pose;
 
+    [SerializeField]
+    private Camera mainCamera;
+    [SerializeField]
+    private Camera playerCamera;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,18 +71,10 @@ public class GameManager : MonoBehaviour
             if (nowEnemyCount <= 0 && turnNumber >= maxTurn)
             {
                 gameState = GameState.GAMECLEAR;
-                if (Input.anyKeyDown)
-                {
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                }
             }
             if (player.transform.position.y <= -10)
             {
                 gameState = GameState.GAMEOVER;
-                if (Input.anyKeyDown)
-                {
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                }
             }
         }
 
@@ -102,6 +99,8 @@ public class GameManager : MonoBehaviour
         {
             case TrunState.ENEMYTURN:
                 enemyStopNumber = 0;
+                    mainCamera.enabled = true;
+                    playerCamera.enabled = false;
 
                 for (int i = 0; i <= enemyList.Length - 1; i++)
                 {
@@ -136,6 +135,9 @@ public class GameManager : MonoBehaviour
                     }
                     enemyAttackNumber = 0;
                     enemyAttackTimer = enemyAttackTime;
+                        mainCamera.enabled = false;
+                        playerCamera.enabled = true;
+                    
                 }
                 enemyStopNumber = 0;
 
