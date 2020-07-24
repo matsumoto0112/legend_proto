@@ -551,6 +551,11 @@ public class Keshipin_Move : MonoBehaviour
         keshikasuNumber--;
     }
 
+    public bool ReturnSkillWait()
+    {
+        return skillWait;
+    }
+
     private void OnCollisionStay(Collision collision)
     {
         if(collision.transform.tag == "Stage")
