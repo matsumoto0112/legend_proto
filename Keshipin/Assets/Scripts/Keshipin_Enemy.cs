@@ -33,6 +33,11 @@ public class Keshipin_Enemy : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if (isAttack)
+        {
+            attackTimer += Time.deltaTime;
+        }
     }
 
 
@@ -76,7 +81,7 @@ public class Keshipin_Enemy : MonoBehaviour
 
     public bool StopEnemy()
     {
-        if (isAttack && rigid.velocity.magnitude <= 0.1f)
+        if (isAttack && rigid.velocity.magnitude <= 0.1f && attackTimer >= 2f)
         {
             return true;
         }
@@ -109,11 +114,11 @@ public class Keshipin_Enemy : MonoBehaviour
                 //rigid.AddForce((attackVector * beAttackedImpulsePower) + new Vector3(0, 10, 0), ForceMode.Impulse);
                 if(other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() >= 0)
                 {
-                    rigid.AddForce((attackVector * other.transform.GetComponent<Rigidbody>().velocity.magnitude) + new Vector3(0, other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() * 0.1f, 0) * other.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.Impulse);
+                    rigid.AddForce((attackVector * other.transform.GetComponent<Rigidbody>().velocity.magnitude * 1.5f) + new Vector3(0, other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() * 0.1f, 0) * other.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.Impulse);
                 }
                 else
                 {
-                    rigid.AddForce((attackVector * (other.transform.GetComponent<Rigidbody>().velocity.magnitude - (other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() * 0.1f * -1))), ForceMode.Impulse);
+                    rigid.AddForce((attackVector * (other.transform.GetComponent<Rigidbody>().velocity.magnitude * 1.5f - (other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() * 0.5f * -1))), ForceMode.Impulse);
                 }
                 
             }

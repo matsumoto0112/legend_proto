@@ -124,6 +124,7 @@ public class Keshipin_Move : MonoBehaviour
             CameraChange();
             UI();
         }
+        
         MoveTypeChange();
         ItemRotation();
         CameraRotate();
