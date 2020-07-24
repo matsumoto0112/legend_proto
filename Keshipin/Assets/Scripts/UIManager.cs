@@ -15,11 +15,16 @@ public class UIManager : MonoBehaviour
     private Text poseUI;
     [SerializeField]
     private Image posePanel;
+    [SerializeField]
+    private Text protoText;
+
+    private GameObject player;
 
     // Start is called before the first frame update
     void Start()
     {
         clearOverText.text = "";
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -37,6 +42,15 @@ public class UIManager : MonoBehaviour
         turnStateText.text = GameManager.turnState.ToString();
 
         turnNumberUI.text = GameManager.turnNumber + "ターン目";
+
+        if (player.GetComponent<Keshipin_Move>().ReturnSkillWait())
+        {
+            protoText.text = "左スティック:使いたいスキルを指定\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nBボタン:スキルを発動\nStartボタン: ポーズ\nStart + Select:ゲームを終了";
+        }
+        else
+        {
+            protoText.text = "左スティック:飛ばす方向を指定\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nBボタン(長押し):威力調整\nBボタン(離す):はじく\nStartボタン: ポーズ\nStart + Select:ゲームを終了";
+        }
 
         if (GameManager.pose)
         {
