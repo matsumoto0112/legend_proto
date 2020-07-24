@@ -122,7 +122,6 @@ public class Keshipin_Move : MonoBehaviour
             }
             CameraChange();
             UI();
-            SizeChange();
         }
         MoveTypeChange();
         ItemRotation();
@@ -242,7 +241,7 @@ public class Keshipin_Move : MonoBehaviour
                             }
                             stickVector.Dequeue();
                         }
-                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (typeB_impulsePower * impulsePower), ForceMode.Impulse);
+                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower), ForceMode.Impulse);
                         move = true;
                         impulseVector = beforeFrameVector;
                         triggerCollider.enabled = true;
@@ -296,13 +295,13 @@ public class Keshipin_Move : MonoBehaviour
                     movePowerSlider.gameObject.SetActive(true);
                     if (!minus)
                     {
-                        typeB_impulsePower += Time.deltaTime;
+                        typeB_impulsePower += Time.deltaTime*3;
                     }
                     else
                     {
-                        typeB_impulsePower -= Time.deltaTime;
+                        typeB_impulsePower -= Time.deltaTime*3;
                     }
-                    if (typeB_impulsePower >= 1)
+                    if (typeB_impulsePower >= 3)
                     {
                         minus = true;
                     }
@@ -330,7 +329,7 @@ public class Keshipin_Move : MonoBehaviour
                             }
                             stickVector.Dequeue();
                         }
-                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (typeB_impulsePower * impulsePower), ForceMode.Impulse);
+                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower), ForceMode.Impulse);
                         move = true;
                         impulseVector = beforeFrameVector;
                         triggerCollider.enabled = true;
@@ -437,7 +436,8 @@ public class Keshipin_Move : MonoBehaviour
 
     void SizeChange()
     {
-        transform.localScale = firstSize * (1 + (keshikasuNumber / 10));
+        transform.localScale = firstSize * (1 + (keshikasuNumber / 100));
+        //transform.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
     }
 
     void Skill()
@@ -509,19 +509,34 @@ public class Keshipin_Move : MonoBehaviour
     {
         if(itemUp != null)
         {
-            itemUp.transform.position = transform.position + transform.rotation * new Vector3(0, 0.75f + keshikasuNumber*0.05f, 1f);
+            itemUp.transform.position = transform.position + transform.rotation * new Vector3(0, 0.75f + keshikasuNumber*0.005f, 1f);
             itemUp.transform.rotation = transform.rotation;
         }
         if (itemRight != null)
         {
-            itemRight.transform.position = transform.position + transform.rotation * new Vector3(1.25f + keshikasuNumber * 0.1f, 0, 0);
+            itemRight.transform.position = transform.position + transform.rotation * new Vector3(1.25f + keshikasuNumber * 0.01f, 0, 0);
             itemRight.transform.rotation = transform.rotation;
         }
         if (itemLeft != null)
         {
-            itemLeft.transform.position = transform.position + transform.rotation * new Vector3(-1.25f - keshikasuNumber * 0.1f, 0, 0);
+            itemLeft.transform.position = transform.position + transform.rotation * new Vector3(-1.25f - keshikasuNumber * 0.01f, 0, 0);
             itemLeft.transform.rotation = transform.rotation;
         }
+    }
+
+    public bool ReturnMove()
+    {
+        return move;
+    }
+
+    public Vector3 ReturnVector()
+    {
+        return rigid.velocity.normalized;
+    }
+
+    public float ReturnKeshikasuNumber()
+    {
+        return keshikasuNumber;
     }
 
     private void OnCollisionStay(Collision collision)
@@ -549,7 +564,6 @@ public class Keshipin_Move : MonoBehaviour
             {
                 itemUp = other.GetComponent<Item>();
                 skillState = SkillState.ITEM_UP;
-                Debug.Log("OIANDJKDOWJDKOACW");
             }
             else if(itemRight == null)
             {
@@ -567,6 +581,7 @@ public class Keshipin_Move : MonoBehaviour
             Destroy(other.gameObject);
             //rigid.mass = transform.localScale.y;
             keshikasuNumber++;
+            SizeChange();
         }
     }
 }
