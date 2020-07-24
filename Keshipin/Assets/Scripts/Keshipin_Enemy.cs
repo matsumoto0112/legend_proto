@@ -29,7 +29,7 @@ public class Keshipin_Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(transform.position.y <= -10)
+        if (transform.position.y <= -10)
         {
             Destroy(gameObject);
         }
@@ -51,8 +51,22 @@ public class Keshipin_Enemy : MonoBehaviour
         if (!isAttack)
         {
             Vector3 attackVector = (player.transform.position - transform.position).normalized;
+            var power = impulsePower;
+            var search = FindObjectOfType<SearchAI_Manager>();
+            if (search != null)
+            {
+                var s = search.SearchCourse(gameObject);
+                var p = GameObject.FindGameObjectWithTag("Player");
+                var multiple = (p == null) ? 2.0f : ((p.transform.position - s).magnitude < 0.01f ? 3.0f : 2.0f);
+                var vector = (s - transform.position);
+                attackVector = vector.normalized;
+                power = (vector.magnitude * multiple < power) ? vector.magnitude * multiple : power;
+                //Debug.Log(name + ": " + s + " - " + transform.position + " => " + vector);
+                //power = (vector.magnitude <= impulsePower) ? vector.magnitude : impulsePower;
+            }
+
             SoundManager.PlaySE(0);
-            rigid.AddForce(attackVector * impulsePower, ForceMode.Impulse);
+            rigid.AddForce(attackVector * power, ForceMode.Impulse);
             isAttack = true;
         }
         else
@@ -63,7 +77,7 @@ public class Keshipin_Enemy : MonoBehaviour
 
     public bool StopEnemy()
     {
-        if(isAttack && rigid.velocity.magnitude <= 0.1f)
+        if (isAttack && rigid.velocity.magnitude <= 0.1f)
         {
             return true;
         }
@@ -86,7 +100,7 @@ public class Keshipin_Enemy : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(GameManager.turnState == GameManager.TrunState.PLAYERTURN)
+        if (GameManager.turnState == GameManager.TrunState.PLAYERTURN)
         {
             if (other.transform.tag == "Player")
             {
@@ -94,7 +108,7 @@ public class Keshipin_Enemy : MonoBehaviour
                 Vector3 attackVector = (transform.position - other.transform.position).normalized;
                 attackVector -= new Vector3(0, attackVector.y, 0);
                 //rigid.AddForce((attackVector * beAttackedImpulsePower) + new Vector3(0, 10, 0), ForceMode.Impulse);
-                rigid.AddForce((attackVector * other.transform.GetComponent<Rigidbody>().velocity.magnitude) + new Vector3(0, other.transform.localScale.y -1, 0) * other.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.Impulse);
+                rigid.AddForce((attackVector * other.transform.GetComponent<Rigidbody>().velocity.magnitude) + new Vector3(0, other.transform.localScale.y - 1, 0) * other.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.Impulse);
             }
         }
     }
@@ -103,9 +117,9 @@ public class Keshipin_Enemy : MonoBehaviour
     {
         if (GameManager.turnState == GameManager.TrunState.PLAYERTURN)
         {
-            if(collision.transform.tag == "Stage")
+            if (collision.transform.tag == "Stage")
             {
-                if(rigid.velocity.magnitude >= 1 && Random.Range(0,100) <= 5)
+                if (rigid.velocity.magnitude >= 1 && Random.Range(0, 100) <= 5)
                 {
                     Instantiate(keshikasu, transform.position - new Vector3(0, transform.position.y, 0), Quaternion.identity);
                 }
