@@ -31,7 +31,7 @@ public class SearchAI_Manager : MonoBehaviour
 
         var vector = (end - start);
         var hitList = (Physics.RaycastAll(start, vector, vector.magnitude)).ToList();
-        hitList.RemoveAll(h => ((h.transform.tag == "Enemy") || (h.transform.tag == "Player")));
+        hitList.RemoveAll(h => ((h.transform.tag == "Player")));
 
         if (0 < hitList.Count)
         {
@@ -76,7 +76,7 @@ public class SearchAI_Manager : MonoBehaviour
                 var sPos = searched[i].BaseSearch().transform.position;
                 var ePos = child[j].BaseSearch().transform.position;
                 var hitList = (Physics.RaycastAll(sPos, (ePos - sPos), (ePos - sPos).magnitude)).ToList();
-                hitList.RemoveAll(h => ((h.transform.tag == "Enemy") || (h.transform.tag == "Player")));
+                hitList.RemoveAll(h => ((h.transform.tag == "Player")));
 
                 if (hitList.Count <= 0)
                 {
@@ -118,7 +118,7 @@ public class SearchAI_Manager : MonoBehaviour
 
             var vector = (end - start);
             var hitList = (Physics.RaycastAll(start, vector, vector.magnitude)).ToList();
-            hitList.RemoveAll(h => ((h.transform.tag == "Enemy") || (h.transform.tag == "Player")));
+            hitList.RemoveAll(h => ((h.transform.tag == "Player")));
 
             if (hitList.Count <= 0)
             {
@@ -139,7 +139,7 @@ public class SearchAI_Manager : MonoBehaviour
 
             var vector = (end - start);
             var hitList = (Physics.RaycastAll(start, vector, vector.magnitude)).ToList();
-            hitList.RemoveAll(h => ((h.transform.tag == "Enemy") || (h.transform.tag == "Player")));
+            hitList.RemoveAll(h => ((h.transform.tag == "Player")));
 
             if (0 < hitList.Count)
             {
@@ -201,7 +201,7 @@ public class SearchAI_Manager : MonoBehaviour
             {
                 var vector = (i.transform.position - originPos);
                 var hitList = (Physics.RaycastAll(originPos, vector, vector.magnitude)).ToList();
-                hitList.RemoveAll(h => ((h.transform.tag == "Enemy") || (h.transform.tag == "Player")));
+                hitList.RemoveAll(h => ((h.transform.tag == "Player")));
                 if (hitList.Count <= 0)
                 {
                     result = i;
