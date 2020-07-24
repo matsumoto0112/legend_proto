@@ -66,10 +66,18 @@ public class GameManager : MonoBehaviour
             if (nowEnemyCount <= 0 && turnNumber >= maxTurn)
             {
                 gameState = GameState.GAMECLEAR;
+                if (Input.anyKeyDown)
+                {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                }
             }
             if (player.transform.position.y <= -10)
             {
                 gameState = GameState.GAMEOVER;
+                if (Input.anyKeyDown)
+                {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                }
             }
         }
 

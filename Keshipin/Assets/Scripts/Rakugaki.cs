@@ -39,7 +39,7 @@ public class Rakugaki : MonoBehaviour
                 {
                     if(other.GetComponent<Rigidbody>().velocity.magnitude >= 0.2f)
                     {
-                        Instantiate(keshikasu, other.transform.position + -other.GetComponent<Keshipin_Move>().ReturnVector() * (3 * (other.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber()*0.1f)), Quaternion.identity);
+                        Instantiate(keshikasu, other.transform.position + -other.GetComponent<Keshipin_Move>().ReturnVector() * (3 * (1 + other.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber()*0.01f)), Quaternion.identity);
                         render.material.color = new Color(render.material.color.r, render.material.color.g, render.material.color.b, render.material.color.a - 0.01f);
                         keshikasuTimer = 0;
                     }
