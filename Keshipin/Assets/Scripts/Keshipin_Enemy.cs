@@ -108,23 +108,31 @@ public class Keshipin_Enemy : MonoBehaviour
                 Vector3 attackVector = (transform.position - other.transform.position).normalized;
                 attackVector -= new Vector3(0, attackVector.y, 0);
                 //rigid.AddForce((attackVector * beAttackedImpulsePower) + new Vector3(0, 10, 0), ForceMode.Impulse);
-                rigid.AddForce((attackVector * other.transform.GetComponent<Rigidbody>().velocity.magnitude) + new Vector3(0, other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() * 0.01f, 0) * other.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.Impulse);
+                if(other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() >= 0)
+                {
+                    rigid.AddForce((attackVector * other.transform.GetComponent<Rigidbody>().velocity.magnitude) + new Vector3(0, other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() * 0.1f, 0) * other.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.Impulse);
+                }
+                else
+                {
+                    rigid.AddForce((attackVector * (other.transform.GetComponent<Rigidbody>().velocity.magnitude - (other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() * 0.1f * -1))), ForceMode.Impulse);
+                }
+                
             }
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if (GameManager.turnState == GameManager.TrunState.PLAYERTURN)
-        {
-            if (collision.transform.tag == "Stage")
-            {
-                if (rigid.velocity.magnitude >= 1 && Random.Range(0, 100) <= 5)
-                {
-                    GameObject keshikasuObj = Instantiate(keshikasu, transform.position - new Vector3(0, transform.position.y, 0), Quaternion.identity);
-                    keshikasuObj.transform.position -= new Vector3(0, keshikasuObj.transform.position.y, 0);
-                }
-            }
-        }
+        //if (GameManager.turnState == GameManager.TrunState.PLAYERTURN)
+        //{
+        //    if (collision.transform.tag == "Stage")
+        //    {
+        //        if (rigid.velocity.magnitude >= 1 && Random.Range(0, 100) <= 5)
+        //        {
+        //            GameObject keshikasuObj = Instantiate(keshikasu, transform.position - new Vector3(0, transform.position.y, 0), Quaternion.identity);
+        //            keshikasuObj.transform.position -= new Vector3(0, keshikasuObj.transform.position.y, 0);
+        //        }
+        //    }
+        //}
     }
 }

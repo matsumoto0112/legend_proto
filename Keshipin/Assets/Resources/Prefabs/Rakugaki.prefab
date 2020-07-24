@@ -110,7 +110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keshikasu: {fileID: 4976297002402495719, guid: 07384cb03152a0740910a84044c2894f,
     type: 3}
-  keshikasuTime: 0.1
+  keshikasuTime: 0.4
 --- !u!114 &2259205315620266618
 MonoBehaviour:
   m_ObjectHideFlags: 0

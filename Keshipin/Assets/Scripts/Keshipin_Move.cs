@@ -57,7 +57,8 @@ public class Keshipin_Move : MonoBehaviour
     private Collider triggerCollider;
 
     private Vector3 firstSize;
-    private float keshikasuNumber;
+    [SerializeField]
+    private float keshikasuNumber = 0;
 
     private bool skillWait;
     private Item itemUp,itemLeft,itemRight;
@@ -99,7 +100,7 @@ public class Keshipin_Move : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
 
         firstSize = transform.localScale;
-        keshikasuNumber = 0;
+        //keshikasuNumber = 0;
 
         skillWait = false;
         skillState = SkillState.NULL;
@@ -126,6 +127,8 @@ public class Keshipin_Move : MonoBehaviour
         MoveTypeChange();
         ItemRotation();
         CameraRotate();
+
+        Debug.Log("KESHIKASU:"+keshikasuNumber);
     }
 
 
@@ -330,6 +333,10 @@ public class Keshipin_Move : MonoBehaviour
                             stickVector.Dequeue();
                         }
                         rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower * typeB_impulsePower), ForceMode.Impulse);
+                        if(typeB_impulsePower >= 0.8f)
+                        {
+                            rigid.AddForce(playerCamera.transform.rotation * new Vector3(Random.Range(-30, 30), 0, 0), ForceMode.Impulse);
+                        }
                         move = true;
                         impulseVector = beforeFrameVector;
                         triggerCollider.enabled = true;
@@ -360,21 +367,21 @@ public class Keshipin_Move : MonoBehaviour
         
         if (move)
         {
-            //if(Input.GetButtonDown("BButton"))
-            //{
-            //    rigid.AddTorque(new Vector3(0, 100, 0), ForceMode.Impulse);
-            //}
+            ////if(Input.GetButtonDown("BButton"))
+            ////{
+            ////    rigid.AddTorque(new Vector3(0, 100, 0), ForceMode.Impulse);
+            ////}
 
-            if(Input.GetButton("AButton") && rigid.velocity.magnitude >= 0.01f)
-            {
-                meshRenderer.material.color = Color.red;
-                rigid.velocity -= rigid.velocity / 0.8f * Time.deltaTime;
+            //if(Input.GetButton("AButton") && rigid.velocity.magnitude >= 0.01f)
+            //{
+            //    meshRenderer.material.color = Color.red;
+            //    rigid.velocity -= rigid.velocity / 0.8f * Time.deltaTime;
                 
-            }
-            else
-            {
-                meshRenderer.material.color = Color.white;
-            }
+            //}
+            //else
+            //{
+            //    meshRenderer.material.color = Color.white;
+            //}
         }
         else
         {
@@ -509,17 +516,17 @@ public class Keshipin_Move : MonoBehaviour
     {
         if(itemUp != null)
         {
-            itemUp.transform.position = transform.position + transform.rotation * new Vector3(0, 0.75f + keshikasuNumber*0.005f, 1f);
+            itemUp.transform.position = transform.position + transform.rotation * new Vector3(0, 0.75f, 1f);
             itemUp.transform.rotation = transform.rotation;
         }
         if (itemRight != null)
         {
-            itemRight.transform.position = transform.position + transform.rotation * new Vector3(1.25f + keshikasuNumber * 0.01f, 0, 0);
+            itemRight.transform.position = transform.position + transform.rotation * new Vector3(1.25f, 0, 0);
             itemRight.transform.rotation = transform.rotation;
         }
         if (itemLeft != null)
         {
-            itemLeft.transform.position = transform.position + transform.rotation * new Vector3(-1.25f - keshikasuNumber * 0.01f, 0, 0);
+            itemLeft.transform.position = transform.position + transform.rotation * new Vector3(-1.25f, 0, 0);
             itemLeft.transform.rotation = transform.rotation;
         }
     }
@@ -537,6 +544,11 @@ public class Keshipin_Move : MonoBehaviour
     public float ReturnKeshikasuNumber()
     {
         return keshikasuNumber;
+    }
+
+    public void MinusKeshikasuNumber()
+    {
+        keshikasuNumber--;
     }
 
     private void OnCollisionStay(Collision collision)

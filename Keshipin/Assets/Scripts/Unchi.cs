@@ -13,6 +13,13 @@ public class Unchi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Unchi");
+        //if (Random.Range(0, 100000) <= 1)
+        //{
+        //    Debug.Log("Chinchin");
+        //}
+        //else
+        //{
+        //    Debug.Log("Unchi");
+        //}
     }
 }
