@@ -241,7 +241,7 @@ public class Keshipin_Move : MonoBehaviour
                             }
                             stickVector.Dequeue();
                         }
-                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower), ForceMode.Impulse);
+                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower * typeB_impulsePower), ForceMode.Impulse);
                         move = true;
                         impulseVector = beforeFrameVector;
                         triggerCollider.enabled = true;
@@ -295,13 +295,13 @@ public class Keshipin_Move : MonoBehaviour
                     movePowerSlider.gameObject.SetActive(true);
                     if (!minus)
                     {
-                        typeB_impulsePower += Time.deltaTime*3;
+                        typeB_impulsePower += Time.deltaTime;
                     }
                     else
                     {
-                        typeB_impulsePower -= Time.deltaTime*3;
+                        typeB_impulsePower -= Time.deltaTime;
                     }
-                    if (typeB_impulsePower >= 3)
+                    if (typeB_impulsePower >= 1)
                     {
                         minus = true;
                     }
@@ -329,7 +329,7 @@ public class Keshipin_Move : MonoBehaviour
                             }
                             stickVector.Dequeue();
                         }
-                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower), ForceMode.Impulse);
+                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower * typeB_impulsePower), ForceMode.Impulse);
                         move = true;
                         impulseVector = beforeFrameVector;
                         triggerCollider.enabled = true;
@@ -581,7 +581,7 @@ public class Keshipin_Move : MonoBehaviour
             Destroy(other.gameObject);
             //rigid.mass = transform.localScale.y;
             keshikasuNumber++;
-            SizeChange();
+            //SizeChange();
         }
     }
 }

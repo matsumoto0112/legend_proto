@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7292011684500661727}
   - component: {fileID: 7292011684500661726}
   - component: {fileID: 7292011684500661699}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TekiKeshipin
   m_TagString: Enemy
   m_Icon: {fileID: 0}

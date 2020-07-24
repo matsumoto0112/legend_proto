@@ -121,7 +121,8 @@ public class Keshipin_Enemy : MonoBehaviour
             {
                 if (rigid.velocity.magnitude >= 1 && Random.Range(0, 100) <= 5)
                 {
-                    Instantiate(keshikasu, transform.position - new Vector3(0, transform.position.y, 0), Quaternion.identity);
+                    GameObject keshikasuObj = Instantiate(keshikasu, transform.position - new Vector3(0, transform.position.y, 0), Quaternion.identity);
+                    keshikasuObj.transform.position -= new Vector3(0, keshikasuObj.transform.position.y, 0);
                 }
             }
         }
