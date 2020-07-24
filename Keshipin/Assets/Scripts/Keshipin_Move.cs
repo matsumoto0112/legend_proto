@@ -581,7 +581,7 @@ public class Keshipin_Move : MonoBehaviour
             Destroy(other.gameObject);
             //rigid.mass = transform.localScale.y;
             keshikasuNumber++;
-            SizeChange();
+            //SizeChange();
         }
     }
 }
