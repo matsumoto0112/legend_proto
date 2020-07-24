@@ -63,6 +63,7 @@ public class Keshipin_Enemy : MonoBehaviour
                 var s = search.SearchCourse(gameObject);
                 var p = GameObject.FindGameObjectWithTag("Player");
                 var vector = (s - transform.position);
+                vector.y = 0;
                 attackVector = vector.normalized;
                 power = ((p == null) || ((p.transform.position - s).magnitude < 0.01f)) ? power : Mathf.Clamp(vector.magnitude, 10, power);
                 //Debug.Log(name + ": " + s + " - " + transform.position + " => " + vector);
