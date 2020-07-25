@@ -20,6 +20,7 @@ public class Keshipin_Move : MonoBehaviour
     private Slider movePowerSlider;
     [SerializeField]
     private Text moveTypeText;
+    private int moveTypeNumber;
     private bool stopMove;
 
     [SerializeField]
@@ -104,6 +105,8 @@ public class Keshipin_Move : MonoBehaviour
 
         skillWait = false;
         skillState = SkillState.NO_ITEM;
+
+        moveTypeNumber = 1;
     }
 
     // Update is called once per frame
@@ -513,6 +516,28 @@ public class Keshipin_Move : MonoBehaviour
 
     void MoveTypeChange()
     {
+        if (Input.GetButtonDown("XButton"))
+        {
+            moveTypeNumber++;
+            if(moveTypeNumber >= 4)
+            {
+                moveTypeNumber = 1;
+            }
+        }
+
+        switch (moveTypeNumber)
+        {
+            case 1:
+                moveType = MoveType.MOVETYPE_1;
+                break;
+            case 2:
+                moveType = MoveType.MOVETYPE_2;
+                break;
+            case 3:
+                moveType = MoveType.MOVETYPE_3;
+                break;
+        }
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             moveType = MoveType.MOVETYPE_1;
