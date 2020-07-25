@@ -32,8 +32,6 @@ public class Rakugaki : MonoBehaviour
         {
             if (other.GetComponent<Keshipin_Move>().ReturnMove())
             {
-
-
                 keshikasuTimer += Time.deltaTime;
                 if (keshikasuTimer >= keshikasuTime)
                 {
@@ -42,11 +40,10 @@ public class Rakugaki : MonoBehaviour
                         GameObject keshikasuObj = Instantiate(keshikasu, other.transform.position + -other.GetComponent<Keshipin_Move>().ReturnVector() * 3, Quaternion.identity);
                         keshikasuObj.transform.position -= new Vector3(0, keshikasuObj.transform.position.y, 0);
                         
-                        render.material.color = new Color(render.material.color.r, render.material.color.g, render.material.color.b, render.material.color.a - 0.01f);
+                        render.material.color = new Color(render.material.color.r, render.material.color.g, render.material.color.b, render.material.color.a - 0.05f);
                         other.GetComponent<Keshipin_Move>().MinusKeshikasuNumber();
                         keshikasuTimer = 0;
                     }
-
                 }
 
                 if (render.material.color.a <= 0.01f)
@@ -65,7 +62,7 @@ public class Rakugaki : MonoBehaviour
                     GameObject keshikasuObj = Instantiate(keshikasu, other.transform.position + -other.GetComponent<Rigidbody>().velocity.normalized * 3, Quaternion.identity);
                     keshikasuObj.transform.position -= new Vector3(0, keshikasuObj.transform.position.y, 0);
                     keshikasuObj.GetComponent<MeshRenderer>().material.color = Color.gray;
-                    render.material.color = new Color(render.material.color.r, render.material.color.g, render.material.color.b, render.material.color.a - 0.01f);
+                    render.material.color = new Color(render.material.color.r, render.material.color.g, render.material.color.b, render.material.color.a - 0.05f);
                     keshikasuTimer = 0;
                 }
             }

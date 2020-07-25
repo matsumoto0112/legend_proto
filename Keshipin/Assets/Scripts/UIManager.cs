@@ -54,13 +54,13 @@ public class UIManager : MonoBehaviour
             switch (player.GetComponent<Keshipin_Move>().ReturnMoveType())
             {
                 case Keshipin_Move.MoveType.MOVETYPE_1:
-                    protoText.text = "左スティックを引く:飛ばす方向を指定\n左スティックを離す:はじく\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nStartボタン: ポーズ\nStart + Select:ゲームを終了\nRボタン:リトライ";
+                    protoText.text = "操作方法の変更:キーボード1.2.3\n左スティックを引く:飛ばす方向を指定\n左スティックを離す:はじく\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nStartボタン: ポーズ\nStart + Select:ゲームを終了\nRボタン:リトライ";
                     break;
                 case Keshipin_Move.MoveType.MOVETYPE_2:
-                    protoText.text = "左スティック:飛ばす方向を指定\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nBボタン(長押し):威力調整\nBボタン(離す):はじく\nStartボタン: ポーズ\nStart + Select:ゲームを終了\nRボタン:リトライ";
+                    protoText.text = "操作方法の変更:キーボード1.2.3\n左スティック:飛ばす方向を指定\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nBボタン(長押し):威力調整\nBボタン(離す):はじく\nStartボタン: ポーズ\nStart + Select:ゲームを終了\nRボタン:リトライ";
                     break;
                 case Keshipin_Move.MoveType.MOVETYPE_3:
-                    protoText.text = "左スティック:飛ばす方向を指定\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nBボタン(長押し):威力調整\nBボタン(離す):はじく\nStartボタン: ポーズ\nStart + Select:ゲームを終了\nRボタン:リトライ";
+                    protoText.text = "操作方法の変更:キーボード1.2.3\n左スティック:飛ばす方向を指定\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nBボタン(長押し):威力調整\nBボタン(離す):はじく\nStartボタン: ポーズ\nStart + Select:ゲームを終了\nRボタン:リトライ";
                     break;
             }
             

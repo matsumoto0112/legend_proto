@@ -15,7 +15,7 @@ public class Keshipin_Move : MonoBehaviour
     [SerializeField]
     private float impulsePower = 10;
 
-    private float typeB_impulsePower;
+    private float moveImpulsePower;
     [SerializeField]
     private Slider movePowerSlider;
     [SerializeField]
@@ -62,7 +62,7 @@ public class Keshipin_Move : MonoBehaviour
 
     private bool skillWait;
     private Item itemUp,itemLeft,itemRight;
-    enum SkillState {ITEM_UP,ITEM_RIGHT,ITEM_LEFT,NULL};
+    enum SkillState {ITEM_UP,ITEM_RIGHT,ITEM_LEFT,NO_ITEM};
     private SkillState skillState;
     [SerializeField]
     private Text skillUI;
@@ -88,7 +88,7 @@ public class Keshipin_Move : MonoBehaviour
         //items = new List<GameObject>();
         moveTime = 0;
 
-        typeB_impulsePower = 0;
+        moveImpulsePower = 0;
         movePowerSlider.gameObject.SetActive(false);
         minus = false;
         stopMove = false;
@@ -103,7 +103,7 @@ public class Keshipin_Move : MonoBehaviour
         //keshikasuNumber = 0;
 
         skillWait = false;
-        skillState = SkillState.NULL;
+        skillState = SkillState.NO_ITEM;
     }
 
     // Update is called once per frame
@@ -137,11 +137,12 @@ public class Keshipin_Move : MonoBehaviour
         switch (moveType)
         {
             case MoveType.MOVETYPE_1:
-                nowFrameVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+                nowFrameVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
                 if (move)
                 {
                     moveTime += Time.deltaTime;
+                    movePowerSlider.gameObject.SetActive(false);
                     playerCamera.fieldOfView = 60 + (rigid.velocity.magnitude * 2);
 
                     if (moveTime >= 1 && rigid.velocity.magnitude == 0 && !GameManager.enemyMove)
@@ -155,7 +156,10 @@ public class Keshipin_Move : MonoBehaviour
                         triggerCollider.enabled = false;
                     }
                 }
-
+                else if(!move && GameManager.turnState == GameManager.TrunState.PLAYERTURN)
+                {
+                    movePowerSlider.gameObject.SetActive(true);
+                }
                 if (beforeFrameVector != Vector3.zero && nowFrameVector == Vector3.zero && !move && playerCamera.enabled)
                 {
                     Vector3 maxVector = Vector3.zero;
@@ -168,12 +172,20 @@ public class Keshipin_Move : MonoBehaviour
                         }
                         stickVector.Dequeue();
                     }
+                    
                     rigid.AddForce(playerCamera.transform.rotation * -maxVector * impulsePower, ForceMode.Impulse);
+                    if (moveImpulsePower >= 0.8f)
+                    {
+                        rigid.AddForce(playerCamera.transform.rotation * new Vector3(Random.Range(-10, 10), 0, 0), ForceMode.Impulse);
+                    }
                     move = true;
                     impulseVector = beforeFrameVector;
                     triggerCollider.enabled = true;
                     SoundManager.PlaySE(0);
                 }
+
+                moveImpulsePower = nowFrameVector.magnitude;
+                movePowerSlider.value = moveImpulsePower;
 
                 beforeFrameVector = nowFrameVector;
 
@@ -186,7 +198,7 @@ public class Keshipin_Move : MonoBehaviour
                 break;
 
             case MoveType.MOVETYPE_2:
-                nowFrameVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+                nowFrameVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
                 if (move)
                 {
@@ -200,7 +212,7 @@ public class Keshipin_Move : MonoBehaviour
                         playerCamera.enabled = true;
                         dramaticCamera.enabled = false;
                         moveTime = 0;
-                        typeB_impulsePower = 0;
+                        moveImpulsePower = 0;
                         minus = false;
                         GameManager.turnState = GameManager.TrunState.ENEMYTURN;
                         triggerCollider.enabled = false;
@@ -212,21 +224,21 @@ public class Keshipin_Move : MonoBehaviour
                     movePowerSlider.gameObject.SetActive(true);
                     if (!minus)
                     {
-                        typeB_impulsePower += Time.deltaTime;
+                        moveImpulsePower += Time.deltaTime;
                     }
                     else
                     {
-                        typeB_impulsePower -= Time.deltaTime;
+                        moveImpulsePower -= Time.deltaTime;
                     }
-                    if(typeB_impulsePower >= 1)
+                    if(moveImpulsePower >= 1)
                     {
                         minus = true;
                     }
-                    else if(typeB_impulsePower <= 0)
+                    else if(moveImpulsePower <= 0)
                     {
                         minus = false;
                     }
-                    movePowerSlider.value = typeB_impulsePower;
+                    movePowerSlider.value = moveImpulsePower;
                 }
                 if (Input.GetButtonUp("BButton"))
                 {
@@ -243,8 +255,8 @@ public class Keshipin_Move : MonoBehaviour
                             }
                             stickVector.Dequeue();
                         }
-                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower * typeB_impulsePower), ForceMode.Impulse);
-                        if (typeB_impulsePower >= 0.8f)
+                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower * moveImpulsePower), ForceMode.Impulse);
+                        if (moveImpulsePower >= 0.8f)
                         {
                             rigid.AddForce(playerCamera.transform.rotation * new Vector3(Random.Range(-10, 10), 0, 0), ForceMode.Impulse);
                         }
@@ -255,7 +267,7 @@ public class Keshipin_Move : MonoBehaviour
                     }
                     else
                     {
-                        typeB_impulsePower = 0;
+                        moveImpulsePower = 0;
                         minus = false;
                     }
                 }
@@ -273,7 +285,7 @@ public class Keshipin_Move : MonoBehaviour
             case MoveType.MOVETYPE_3:
                 if (!stopMove)
                 {
-                    nowFrameVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+                    nowFrameVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
                 }
 
                 if (move)
@@ -288,7 +300,7 @@ public class Keshipin_Move : MonoBehaviour
                         playerCamera.enabled = true;
                         dramaticCamera.enabled = false;
                         moveTime = 0;
-                        typeB_impulsePower = 0;
+                        moveImpulsePower = 0;
                         minus = false;
                         GameManager.turnState = GameManager.TrunState.ENEMYTURN;
                         triggerCollider.enabled = false;
@@ -301,21 +313,21 @@ public class Keshipin_Move : MonoBehaviour
                     movePowerSlider.gameObject.SetActive(true);
                     if (!minus)
                     {
-                        typeB_impulsePower += Time.deltaTime;
+                        moveImpulsePower += Time.deltaTime;
                     }
                     else
                     {
-                        typeB_impulsePower -= Time.deltaTime;
+                        moveImpulsePower -= Time.deltaTime;
                     }
-                    if (typeB_impulsePower >= 1)
+                    if (moveImpulsePower >= 1)
                     {
                         minus = true;
                     }
-                    else if (typeB_impulsePower <= 0)
+                    else if (moveImpulsePower <= 0)
                     {
                         minus = false;
                     }
-                    movePowerSlider.value = typeB_impulsePower;
+                    movePowerSlider.value = moveImpulsePower;
                 }
                 
                 
@@ -335,8 +347,8 @@ public class Keshipin_Move : MonoBehaviour
                             }
                             stickVector.Dequeue();
                         }
-                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower * typeB_impulsePower), ForceMode.Impulse);
-                        if(typeB_impulsePower >= 0.8f)
+                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower * moveImpulsePower), ForceMode.Impulse);
+                        if(moveImpulsePower >= 0.8f)
                         {
                             rigid.AddForce(playerCamera.transform.rotation * new Vector3(Random.Range(-10, 10), 0, 0), ForceMode.Impulse);
                         }
@@ -347,7 +359,7 @@ public class Keshipin_Move : MonoBehaviour
                     }
                     else
                     {
-                        typeB_impulsePower = 0;
+                        moveImpulsePower = 0;
                         minus = false;
                     }
                 }
@@ -418,7 +430,7 @@ public class Keshipin_Move : MonoBehaviour
     {
         if (playerCamera.enabled)
         {
-            playerCamera.transform.RotateAround(transform.position,Vector3.up, Input.GetAxisRaw("Horizontal_R"));
+            playerCamera.transform.RotateAround(transform.position,Vector3.up, Input.GetAxisRaw("Horizontal_R") * 2);
         }
     }
 
@@ -474,7 +486,7 @@ public class Keshipin_Move : MonoBehaviour
             }
             else if(itemUp == null && itemRight == null && itemLeft == null)
             {
-                skillState = SkillState.NULL;
+                skillState = SkillState.NO_ITEM;
             }
 
             if (Input.GetButtonDown("BButton"))
