@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour
 
         enemyAttackNumber = 0;
         enemyAttackTimer = 1;
+
+        Time.timeScale = 1;
     }
 
     // Update is called once per frame
@@ -151,22 +153,27 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R)||Input.GetButtonDown("RButton"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-        if (Input.GetButtonDown("StartButton"))
-        {
-            pose = !pose;
-        }
 
-        if (pose)
+        if (gameState == GameState.GAMEPLAY)
         {
-            Time.timeScale = 0;
+            if (Input.GetButtonDown("StartButton"))
+            {
+                pose = !pose;
+            }
+
+            if (pose)
+            {
+                Time.timeScale = 0;
+            }
+            else
+            {
+                Time.timeScale = 1;
+            }
         }
-        else
-        {
-            Time.timeScale = 1;
-        }
+        
     }
 }

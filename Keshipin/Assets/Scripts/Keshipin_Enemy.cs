@@ -115,7 +115,7 @@ public class Keshipin_Enemy : MonoBehaviour
                 //rigid.AddForce((attackVector * beAttackedImpulsePower) + new Vector3(0, 10, 0), ForceMode.Impulse);
                 if(other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() >= 0)
                 {
-                    rigid.AddForce((attackVector * other.transform.GetComponent<Rigidbody>().velocity.magnitude * 1.5f) + new Vector3(0, other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() * 0.1f, 0) * other.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.Impulse);
+                    rigid.AddForce((attackVector * other.transform.GetComponent<Rigidbody>().velocity.magnitude * 1.5f) + new Vector3(0, other.transform.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber() * 0.05f, 0) * other.transform.GetComponent<Rigidbody>().velocity.magnitude, ForceMode.Impulse);
                 }
                 else
                 {
