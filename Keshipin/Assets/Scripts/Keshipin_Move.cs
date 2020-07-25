@@ -47,9 +47,9 @@ public class Keshipin_Move : MonoBehaviour
     [SerializeField]
     private GameObject moveDirectionObject;
 
-    enum MoveType {MOVETYPE_A,MOVETYPE_B,MOVETYPE_B_A}
+    public enum MoveType {MOVETYPE_1,MOVETYPE_2,MOVETYPE_3}
     [SerializeField]
-    private MoveType moveType = MoveType.MOVETYPE_A;
+    private MoveType moveType = MoveType.MOVETYPE_1;
 
     private MeshRenderer meshRenderer;
 
@@ -128,8 +128,6 @@ public class Keshipin_Move : MonoBehaviour
         MoveTypeChange();
         ItemRotation();
         CameraRotate();
-
-        Debug.Log("KESHIKASU:"+keshikasuNumber);
     }
 
 
@@ -138,7 +136,7 @@ public class Keshipin_Move : MonoBehaviour
         
         switch (moveType)
         {
-            case MoveType.MOVETYPE_A:
+            case MoveType.MOVETYPE_1:
                 nowFrameVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
                 if (move)
@@ -187,7 +185,7 @@ public class Keshipin_Move : MonoBehaviour
                 }
                 break;
 
-            case MoveType.MOVETYPE_B:
+            case MoveType.MOVETYPE_2:
                 nowFrameVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 
                 if (move)
@@ -246,6 +244,10 @@ public class Keshipin_Move : MonoBehaviour
                             stickVector.Dequeue();
                         }
                         rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower * typeB_impulsePower), ForceMode.Impulse);
+                        if (typeB_impulsePower >= 0.8f)
+                        {
+                            rigid.AddForce(playerCamera.transform.rotation * new Vector3(Random.Range(-10, 10), 0, 0), ForceMode.Impulse);
+                        }
                         move = true;
                         impulseVector = beforeFrameVector;
                         triggerCollider.enabled = true;
@@ -268,7 +270,7 @@ public class Keshipin_Move : MonoBehaviour
                 }
                 break;
 
-            case MoveType.MOVETYPE_B_A:
+            case MoveType.MOVETYPE_3:
                 if (!stopMove)
                 {
                     nowFrameVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
@@ -336,7 +338,7 @@ public class Keshipin_Move : MonoBehaviour
                         rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower * typeB_impulsePower), ForceMode.Impulse);
                         if(typeB_impulsePower >= 0.8f)
                         {
-                            rigid.AddForce(playerCamera.transform.rotation * new Vector3(Random.Range(-30, 30), 0, 0), ForceMode.Impulse);
+                            rigid.AddForce(playerCamera.transform.rotation * new Vector3(Random.Range(-10, 10), 0, 0), ForceMode.Impulse);
                         }
                         move = true;
                         impulseVector = beforeFrameVector;
@@ -424,13 +426,13 @@ public class Keshipin_Move : MonoBehaviour
     {
         switch (moveType)
         {
-            case MoveType.MOVETYPE_A:
+            case MoveType.MOVETYPE_1:
                 moveDirectionObject.transform.position = transform.position + playerCamera.transform.rotation * -nowFrameVector.normalized * 10;
                 break;
-            case MoveType.MOVETYPE_B:
+            case MoveType.MOVETYPE_2:
                 moveDirectionObject.transform.position = transform.position + playerCamera.transform.rotation * nowFrameVector.normalized * 10;
                 break;
-            case MoveType.MOVETYPE_B_A:
+            case MoveType.MOVETYPE_3:
                 moveDirectionObject.transform.position = transform.position + playerCamera.transform.rotation * nowFrameVector.normalized * 10;
                 break;
         }
@@ -501,15 +503,15 @@ public class Keshipin_Move : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            moveType = MoveType.MOVETYPE_A;
+            moveType = MoveType.MOVETYPE_1;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            moveType = MoveType.MOVETYPE_B;
+            moveType = MoveType.MOVETYPE_2;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            moveType = MoveType.MOVETYPE_B_A;
+            moveType = MoveType.MOVETYPE_3;
         }
     }
 
@@ -555,6 +557,11 @@ public class Keshipin_Move : MonoBehaviour
     public bool ReturnSkillWait()
     {
         return skillWait;
+    }
+
+    public MoveType ReturnMoveType()
+    {
+        return moveType;
     }
 
     private void OnCollisionStay(Collision collision)

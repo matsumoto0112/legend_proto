@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
     private Image posePanel;
     [SerializeField]
     private Text protoText;
+    [SerializeField]
+    private Text keshikasuUI;
 
     private GameObject player;
 
@@ -45,22 +47,40 @@ public class UIManager : MonoBehaviour
 
         if (player.GetComponent<Keshipin_Move>().ReturnSkillWait())
         {
-            protoText.text = "左スティック:使いたいスキルを指定\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nBボタン:スキルを発動\nStartボタン: ポーズ\nStart + Select:ゲームを終了";
+            protoText.text = "左スティック:使いたいスキルを指定\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nBボタン:スキルを発動\nStartボタン: ポーズ\nStart + Select:ゲームを終了\nRボタン:リトライ";
         }
         else
         {
-            protoText.text = "左スティック:飛ばす方向を指定\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nBボタン(長押し):威力調整\nBボタン(離す):はじく\nStartボタン: ポーズ\nStart + Select:ゲームを終了";
+            switch (player.GetComponent<Keshipin_Move>().ReturnMoveType())
+            {
+                case Keshipin_Move.MoveType.MOVETYPE_1:
+                    protoText.text = "左スティックを引く:飛ばす方向を指定\n左スティックを離す:はじく\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nStartボタン: ポーズ\nStart + Select:ゲームを終了\nRボタン:リトライ";
+                    break;
+                case Keshipin_Move.MoveType.MOVETYPE_2:
+                    protoText.text = "左スティック:飛ばす方向を指定\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nBボタン(長押し):威力調整\nBボタン(離す):はじく\nStartボタン: ポーズ\nStart + Select:ゲームを終了\nRボタン:リトライ";
+                    break;
+                case Keshipin_Move.MoveType.MOVETYPE_3:
+                    protoText.text = "左スティック:飛ばす方向を指定\n右スティック: 視点の回転\nLボタン:スキル待機状態切り替え\nAボタン:視点切り替え\nBボタン(長押し):威力調整\nBボタン(離す):はじく\nStartボタン: ポーズ\nStart + Select:ゲームを終了\nRボタン:リトライ";
+                    break;
+            }
+            
         }
 
-        if (GameManager.pose)
+        keshikasuUI.text = "所持ケシカス数: " + player.GetComponent<Keshipin_Move>().ReturnKeshikasuNumber();
+
+        if(GameManager.gameState == GameManager.GameState.GAMEPLAY)
         {
-            poseUI.text = "ぽーず中";
-            posePanel.enabled = true;
+            if (GameManager.pose)
+            {
+                poseUI.text = "ぽーず中";
+                posePanel.enabled = true;
+            }
+            else
+            {
+                poseUI.text = "";
+                posePanel.enabled = false;
+            }
         }
-        else
-        {
-            poseUI.text = "";
-            posePanel.enabled = false;
-        }
+        
     }
 }
