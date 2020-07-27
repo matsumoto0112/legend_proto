@@ -48,7 +48,7 @@ public class Keshipin_Move : MonoBehaviour
     [SerializeField]
     private GameObject moveDirectionObject;
 
-    public enum MoveType {MOVETYPE_1,MOVETYPE_2,MOVETYPE_3}
+    public enum MoveType {MOVETYPE_1,MOVETYPE_2,MOVETYPE_3,MOVETYPE_4}
     [SerializeField]
     private MoveType moveType = MoveType.MOVETYPE_1;
 
@@ -201,7 +201,7 @@ public class Keshipin_Move : MonoBehaviour
                 break;
 
             case MoveType.MOVETYPE_2:
-                nowFrameVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+                nowFrameVector = new Vector3(-Input.GetAxis("Horizontal"), 0, -Input.GetAxis("Vertical"));
 
                 if (move)
                 {
@@ -288,7 +288,7 @@ public class Keshipin_Move : MonoBehaviour
             case MoveType.MOVETYPE_3:
                 if (!stopMove)
                 {
-                    nowFrameVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+                    nowFrameVector = new Vector3(-Input.GetAxis("Horizontal"), 0, -Input.GetAxis("Vertical"));
                 }
 
                 if (move)
@@ -381,6 +381,96 @@ public class Keshipin_Move : MonoBehaviour
                     }
                 }
                 break;
+            case MoveType.MOVETYPE_4:
+                
+                    nowFrameVector = new Vector3(-Input.GetAxis("Horizontal"), 0, -Input.GetAxis("Vertical"));
+                
+
+                if (move)
+                {
+                    moveTime += Time.deltaTime;
+                    playerCamera.fieldOfView = 60 + (rigid.velocity.magnitude * 2);
+
+                    if (moveTime >= 1 && rigid.velocity.magnitude == 0 && !GameManager.enemyMove)
+                    {
+                        move = false;
+                        mainCamera.enabled = false;
+                        playerCamera.enabled = true;
+                        dramaticCamera.enabled = false;
+                        moveTime = 0;
+                        moveImpulsePower = 0;
+                        minus = false;
+                        GameManager.turnState = GameManager.TrunState.ENEMYTURN;
+                        triggerCollider.enabled = false;
+                    }
+                }
+
+                if (nowFrameVector != Vector3.zero)
+                {
+                    stopMove = true;
+                    movePowerSlider.gameObject.SetActive(true);
+                    if (!minus)
+                    {
+                        moveImpulsePower += Time.deltaTime;
+                    }
+                    else
+                    {
+                        moveImpulsePower -= Time.deltaTime;
+                    }
+                    if (moveImpulsePower >= 1)
+                    {
+                        minus = true;
+                    }
+                    else if (moveImpulsePower <= 0)
+                    {
+                        minus = false;
+                    }
+                    movePowerSlider.value = moveImpulsePower;
+                }
+
+
+                if (nowFrameVector == Vector3.zero)
+                {
+                    stopMove = false;
+                    movePowerSlider.gameObject.SetActive(false);
+                    if (beforeFrameVector != Vector3.zero && !move && playerCamera.enabled)
+                    {
+                        Vector3 maxVector = Vector3.zero;
+                        while (stickVector.Count > 0)
+                        {
+                            if (maxVector.magnitude < stickVector.Peek().magnitude)
+                            {
+                                maxVector = stickVector.Dequeue();
+                                continue;
+                            }
+                            stickVector.Dequeue();
+                        }
+                        rigid.AddForce(playerCamera.transform.rotation * maxVector * (impulsePower * moveImpulsePower), ForceMode.Impulse);
+                        if (moveImpulsePower >= 0.8f)
+                        {
+                            rigid.AddForce(playerCamera.transform.rotation * new Vector3(Random.Range(-10, 10), 0, 0), ForceMode.Impulse);
+                        }
+                        move = true;
+                        impulseVector = beforeFrameVector;
+                        triggerCollider.enabled = true;
+                        SoundManager.PlaySE(0);
+                    }
+                    else
+                    {
+                        moveImpulsePower = 0;
+                        minus = false;
+                    }
+                }
+
+                beforeFrameVector = nowFrameVector;
+
+                stickVector.Enqueue(nowFrameVector);
+
+                while (stickVector.Count > stickVectorMax)
+                {
+                    stickVector.Dequeue();
+                }
+                break;
         }
         
         if (move)
@@ -448,6 +538,9 @@ public class Keshipin_Move : MonoBehaviour
                 moveDirectionObject.transform.position = transform.position + playerCamera.transform.rotation * nowFrameVector.normalized * 10;
                 break;
             case MoveType.MOVETYPE_3:
+                moveDirectionObject.transform.position = transform.position + playerCamera.transform.rotation * nowFrameVector.normalized * 10;
+                break;
+            case MoveType.MOVETYPE_4:
                 moveDirectionObject.transform.position = transform.position + playerCamera.transform.rotation * nowFrameVector.normalized * 10;
                 break;
         }
@@ -519,7 +612,7 @@ public class Keshipin_Move : MonoBehaviour
         if (Input.GetButtonDown("XButton"))
         {
             moveTypeNumber++;
-            if(moveTypeNumber >= 4)
+            if(moveTypeNumber >= 5)
             {
                 moveTypeNumber = 1;
             }
@@ -535,6 +628,9 @@ public class Keshipin_Move : MonoBehaviour
                 break;
             case 3:
                 moveType = MoveType.MOVETYPE_3;
+                break;
+            case 4:
+                moveType = MoveType.MOVETYPE_4;
                 break;
         }
 
