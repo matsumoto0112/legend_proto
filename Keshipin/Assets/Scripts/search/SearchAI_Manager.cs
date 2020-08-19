@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class SearchAI_Manager : MonoBehaviour
 {
@@ -337,3 +340,54 @@ public class SearchAI_Course
         return length;
     }
 }
+
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(SearchAI_Manager), true)]
+public class SearchAI_Manager_Editor : Editor
+{
+    string textFileName = "map_search_data";
+
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        var obj = target as SearchAI_Manager;
+        CreateText(obj);
+        EditorUtility.SetDirty(obj);
+    }
+
+    void CreateText(SearchAI_Manager obj)
+    {
+        GUI.backgroundColor = Color.white * 0.75f;
+        GUILayout.BeginVertical(GUI.skin.box);
+        {
+            GUI.backgroundColor = Color.white;
+            var text = EditorGUILayout.TextField("File_Name",textFileName);
+            if (text != textFileName) textFileName = text;
+
+            if (GUILayout.Button("CreateText"))
+            {
+                List<string> strList = new List<string>();
+                var children = obj.transform.GetChildren();
+                for (int index = 0; index < children.Count; index++)
+                {
+                    var child = children[index];
+                    var searchAI = child.GetComponent<SearchAI>();
+                    if (searchAI == null) continue;
+                    string addData = "search," + child.position.x + "," + child.position.y + "," + child.position.z;
+                    var branch = searchAI.GetBranch();
+                    for (int bIndex = 0; bIndex < branch.Count; bIndex++)
+                    {
+                        int fIndex = children.FindIndex(i => i == branch[bIndex].transform);
+                        if (0 < fIndex) addData += "," + fIndex;
+                    }
+                    Debug.Log(index + ": " + addData);
+                    strList.Add(addData);
+                }
+                Create.SaveText(strList, textFileName);
+            }
+        }
+        GUILayout.EndVertical();
+    }
+}
+#endif

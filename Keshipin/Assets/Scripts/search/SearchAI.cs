@@ -160,6 +160,7 @@ public class SearchAIEditor : Editor
             obj.SetBranch(branch);
         }
         LineEditor(obj);
+        EditorUtility.SetDirty(obj);
     }
 
     /// <summary>
